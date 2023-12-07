@@ -1,31 +1,21 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
-
-name: Node.js CI
+name: Build & Deploy to Github Pages
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    branches: [master, main]
+
+# Before using this action
+# 1. Create a `gh-pages` branch
+# 2. Set up your github pages settings to point to that branch
+# 3. Under your `package.json` set up the `homepage` attribute to your gh-page domain (i.e, `<username>.github.io/<repo>` or your own custom domain)
+
+permissions:
+  contents: write
 
 jobs:
-  build:
-
+  node-to-gh:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [14.x, 16.x, 18.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
+    name: Build & Deploy to Github Pages
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm ci
-    - run: npm run build --if-present
-    - run: npm test
+      - id: node-to-gh
+        uses: fdelmazo/node-to-gh-action@v2
